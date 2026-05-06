@@ -9,14 +9,14 @@ import { ApiService, Experience } from '../../core/services/api.service';
   template: `
     <section id="experience" class="experience-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
           <span class="section-tag">Career Journey</span>
           <h2 class="section-title">Professional Experience</h2>
         </div>
 
         <div class="timeline">
           @for (exp of experiences(); track exp._id; let i = $index) {
-            <div class="timeline-item">
+            <div class="timeline-item" data-animate="fade-up">
               <div class="timeline-marker">
                 <div class="marker-dot" [class.current]="exp.isCurrentRole"></div>
                 <div class="marker-line"></div>

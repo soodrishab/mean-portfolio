@@ -17,16 +17,16 @@ import { ScrollService } from '../../core/services/scroll.service';
 
       <div class="hero-content">
         @if (profile(); as p) {
-          <div class="hero-text">
+          <div class="hero-text" data-animate="fade-right">
             <span class="greeting">Hello, I'm</span>
-            <h1 class="name">{{ p.name }}</h1>
+            <h1 class="name text-shimmer">{{ p.name }}</h1>
             <h2 class="title">
               <span class="typing-text">{{ displayText() }}</span>
               <span class="cursor">|</span>
             </h2>
             <p class="summary">{{ p.tagline }}</p>
 
-            <div class="hero-stats">
+            <div class="hero-stats stagger-children">
               <div class="stat">
                 <span class="stat-number">{{ p.yearsOfExperience }}+</span>
                 <span class="stat-label">Years Experience</span>
@@ -71,8 +71,8 @@ import { ScrollService } from '../../core/services/scroll.service';
             </div>
           </div>
 
-          <div class="hero-image">
-            <div class="image-wrapper">
+          <div class="hero-image" data-animate="fade-left" data-delay="200">
+            <div class="image-wrapper animate-float">
               <div class="image-border"></div>
               @if (p.avatar) {
                 <img

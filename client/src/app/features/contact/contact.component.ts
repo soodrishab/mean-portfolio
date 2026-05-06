@@ -17,7 +17,7 @@ interface ContactForm {
   template: `
     <section id="contact" class="contact-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
           <span class="section-tag">Get in Touch</span>
           <h2 class="section-title">Let's Work Together</h2>
           <p class="section-subtitle">
@@ -26,8 +26,8 @@ interface ContactForm {
         </div>
 
         <div class="contact-content">
-          <div class="contact-info">
-            <div class="info-card">
+          <div class="contact-info stagger-children" data-animate="fade-right">
+            <div class="info-card card-3d">
               <div class="info-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>

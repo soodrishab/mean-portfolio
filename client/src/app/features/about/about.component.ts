@@ -9,17 +9,17 @@ import { ApiService, Profile } from '../../core/services/api.service';
   template: `
     <section id="about" class="about-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
           <span class="section-tag">About Me</span>
           <h2 class="section-title">Know Me Better</h2>
         </div>
 
         @if (profile(); as p) {
           <div class="about-content">
-            <div class="about-text">
+            <div class="about-text" data-animate="fade-right">
               <p class="summary">{{ p.summary }}</p>
 
-              <div class="highlights">
+              <div class="highlights" data-animate="fade-up" data-delay="200">
                 <h3>Core Competencies</h3>
                 <div class="highlight-tags">
                   @for (highlight of p.highlights; track highlight) {
@@ -28,8 +28,8 @@ import { ApiService, Profile } from '../../core/services/api.service';
                 </div>
               </div>
 
-              <div class="info-grid">
-                <div class="info-item">
+              <div class="info-grid stagger-children">
+                <div class="info-item card-3d">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>

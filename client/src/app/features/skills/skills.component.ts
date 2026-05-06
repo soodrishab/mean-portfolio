@@ -9,14 +9,14 @@ import { ApiService, Skill } from '../../core/services/api.service';
   template: `
     <section id="skills" class="skills-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
           <span class="section-tag">Expertise</span>
           <h2 class="section-title">Technical Skills</h2>
         </div>
 
-        <div class="skills-compact">
+        <div class="skills-compact stagger-children">
           @for (skill of skills(); track skill._id) {
-            <div class="skill-group">
+            <div class="skill-group card-3d">
               <h3 class="group-title">
                 <span class="group-icon">{{ getCategoryEmoji(skill.category) }}</span>
                 {{ skill.category }}

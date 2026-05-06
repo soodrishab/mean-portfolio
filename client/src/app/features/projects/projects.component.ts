@@ -9,13 +9,13 @@ import { ApiService, Project } from '../../core/services/api.service';
   template: `
     <section id="projects" class="projects-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
           <span class="section-tag">Portfolio</span>
           <h2 class="section-title">Featured Projects</h2>
           <p class="section-subtitle">Showcasing real-world applications I've built</p>
         </div>
 
-        <div class="filter-tabs">
+        <div class="filter-tabs" data-animate="fade-up" data-delay="100">
           <button
             class="filter-btn"
             [class.active]="!selectedTech()"
@@ -34,9 +34,9 @@ import { ApiService, Project } from '../../core/services/api.service';
           }
         </div>
 
-        <div class="projects-grid">
+        <div class="projects-grid stagger-children">
           @for (project of filteredProjects(); track project._id) {
-            <article class="project-card" [class.featured]="project.isFeatured">
+            <article class="project-card card-3d" [class.featured]="project.isFeatured">
               <div class="card-icon" [attr.data-category]="project.category">
                 @switch (project.category) {
                   @case ('ai') {

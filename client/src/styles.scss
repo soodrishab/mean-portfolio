@@ -180,3 +180,191 @@ button {
     min-height: 44px;
   }
 }
+
+/* ==========================================
+   Scroll Animation Classes
+   ========================================== */
+
+/* Base animation state - hidden */
+[data-animate] {
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animated state - visible */
+[data-animate].animated {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* Fade Up */
+[data-animate="fade-up"] {
+  transform: translateY(60px);
+}
+
+/* Fade Down */
+[data-animate="fade-down"] {
+  transform: translateY(-60px);
+}
+
+/* Fade Left */
+[data-animate="fade-left"] {
+  transform: translateX(60px);
+}
+
+/* Fade Right */
+[data-animate="fade-right"] {
+  transform: translateX(-60px);
+}
+
+/* Zoom In */
+[data-animate="zoom-in"] {
+  transform: scale(0.8);
+}
+
+/* Zoom Out */
+[data-animate="zoom-out"] {
+  transform: scale(1.2);
+}
+
+/* Flip Up */
+[data-animate="flip-up"] {
+  transform: perspective(1000px) rotateX(30deg);
+  transform-origin: bottom;
+}
+
+/* Flip Down */
+[data-animate="flip-down"] {
+  transform: perspective(1000px) rotateX(-30deg);
+  transform-origin: top;
+}
+
+/* Slide Rotate */
+[data-animate="slide-rotate"] {
+  transform: translateY(40px) rotate(-5deg);
+}
+
+/* Scale Fade */
+[data-animate="scale-fade"] {
+  transform: scale(0.9) translateY(30px);
+}
+
+/* Animation Delays */
+[data-delay="100"] { transition-delay: 100ms; }
+[data-delay="200"] { transition-delay: 200ms; }
+[data-delay="300"] { transition-delay: 300ms; }
+[data-delay="400"] { transition-delay: 400ms; }
+[data-delay="500"] { transition-delay: 500ms; }
+[data-delay="600"] { transition-delay: 600ms; }
+[data-delay="700"] { transition-delay: 700ms; }
+[data-delay="800"] { transition-delay: 800ms; }
+
+/* Animation Durations */
+[data-duration="fast"] { transition-duration: 0.4s; }
+[data-duration="slow"] { transition-duration: 1.2s; }
+
+/* Stagger children animations */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stagger-children.animated > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(2) { transition-delay: 100ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(3) { transition-delay: 200ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(4) { transition-delay: 300ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(5) { transition-delay: 400ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(6) { transition-delay: 500ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(7) { transition-delay: 600ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(8) { transition-delay: 700ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(9) { transition-delay: 800ms; opacity: 1; transform: none; }
+.stagger-children.animated > *:nth-child(10) { transition-delay: 900ms; opacity: 1; transform: none; }
+
+/* Parallax effect on scroll */
+.parallax-bg {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.animate-pulse {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Glow effect */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.6); }
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* 3D Card hover effect */
+.card-3d {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card-3d:hover {
+  transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 30px rgba(37, 99, 235, 0.1);
+}
+
+/* Gradient text shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary) 0%,
+    var(--accent-secondary) 25%,
+    var(--accent-tertiary) 50%,
+    var(--accent-secondary) 75%,
+    var(--accent-primary) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Reduce animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-animate] {
+    opacity: 1;
+    transform: none;
+  }
+}
