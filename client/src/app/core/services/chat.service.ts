@@ -52,7 +52,7 @@ export class ChatService {
         {
           role: 'assistant',
           content:
-            "Hi! I'm Rishab's AI assistant. I can answer questions about his experience, skills, projects, and how to get in touch. What would you like to know?"
+            "Hi! I'm Rishab's portfolio assistant and I'd love to help! Try asking about my work experience, technical skills, or projects I've built. For any other queries, head over to the Contact section and drop your message — I'll get back to you ASAP!"
         }
       ]);
     }
@@ -65,7 +65,7 @@ export class ChatService {
         {
           role: 'assistant',
           content:
-            "Hi! I'm Rishab's AI assistant. I can answer questions about his experience, skills, projects, and how to get in touch. What would you like to know?"
+            "Hi! I'm Rishab's portfolio assistant and I'd love to help! Try asking about my work experience, technical skills, or projects I've built. For any other queries, head over to the Contact section and drop your message — I'll get back to you ASAP!"
         }
       ]);
     }
@@ -114,7 +114,7 @@ export class ChatService {
       {
         role: 'assistant',
         content:
-          "Hi! I'm Rishab's AI assistant. How can I help you today?"
+          "Hi! I'm Rishab's portfolio assistant and I'd love to help! Try asking about my work experience, technical skills, or projects I've built. For any other queries, head over to the Contact section and drop your message — I'll get back to you ASAP!"
       }
     ]);
     this.error.set(null);
