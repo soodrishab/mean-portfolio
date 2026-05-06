@@ -2,7 +2,14 @@ import mongoose from 'mongoose';
 
 const connectDB = async (): Promise<void> => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+    const mongoUri = process.env.MONGODB_URI;
+
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI environment variable is not set!');
+    }
+
+    console.log('Connecting to MongoDB...');
+    console.log('URI starts with:', mongoUri.substring(0, 20) + '...');
 
     await mongoose.connect(mongoUri);
 

@@ -1,8 +1,15 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
 import { Profile, Experience, Skill, Project, ChatKnowledge } from '../models';
 
-dotenv.config();
+// Load .env file if it exists (local development)
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+// Debug: Log which MongoDB URI is being used
+const mongoUri = process.env.MONGODB_URI;
+console.log('MONGODB_URI exists:', !!mongoUri);
+console.log('MONGODB_URI starts with:', mongoUri ? mongoUri.substring(0, 20) + '...' : 'NOT SET');
 
 const seedProfile = {
   name: 'Rishab Sood',
@@ -399,8 +406,12 @@ const seedChatKnowledge = [
 
 const seedDatabase = async (): Promise<void> => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
-    await mongoose.connect(mongoUri);
+    const dbUri = process.env.MONGODB_URI;
+    if (!dbUri) {
+      throw new Error('MONGODB_URI environment variable is not set!');
+    }
+    console.log('Connecting to MongoDB Atlas...');
+    await mongoose.connect(dbUri);
     console.log('Connected to MongoDB');
 
     // Clear existing data
