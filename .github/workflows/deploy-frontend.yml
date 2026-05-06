@@ -39,7 +39,7 @@ jobs:
       - name: Build Angular app
         run: |
           cd client
-          npm run build -- --configuration=production --base-href="/"
+          npm run build -- --configuration=production --base-href="/mean-portfolio/"
 
       - name: Create 404.html for SPA routing
         run: cp client/dist/client/browser/index.html client/dist/client/browser/404.html
