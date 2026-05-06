@@ -20,7 +20,7 @@ const seedProfile = {
   phone: '+91 9592006999',
   location: 'Gurgaon, India · Open to Remote',
   avatar: 'https://avatars.githubusercontent.com/u/53430901?v=4',
-  resumeUrl: '/assets/resume/Rishab_Sood_Resume.pdf',
+  resumeUrl: '/assets/Rishab_Sood_Resume.pdf',
   yearsOfExperience: 6,
   socialLinks: [
     { platform: 'GitHub', url: 'https://github.com/rishabsood9', icon: 'fab fa-github' },
