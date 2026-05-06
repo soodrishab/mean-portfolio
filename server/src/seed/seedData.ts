@@ -156,6 +156,7 @@ const seedSkills = [
       { name: 'NGRX', icon: 'ngrx', proficiency: 85 },
       { name: 'HTML5/CSS3/SCSS', icon: 'html5', proficiency: 90 },
       { name: 'Angular Material', icon: 'angular', proficiency: 88 },
+      { name: 'Reactive & Template Forms', icon: 'angular', proficiency: 90 },
       { name: 'Storybook', icon: 'storybook', proficiency: 80 }
     ],
     order: 1
@@ -393,6 +394,20 @@ const seedChatKnowledge = [
     question: 'Do you have healthcare domain experience?',
     answer: "Yes! At CitiusTech, I worked on healthcare projects for DaVita (kidney care) and Arthrex (medical devices). I gained deep understanding of HIPAA compliance, patient registration workflows, and medical imaging standards like DICOM.",
     category: 'domain',
+    priority: 8
+  },
+  {
+    keywords: ['forms', 'reactive forms', 'template forms', 'angular forms', 'form validation'],
+    question: 'What is your experience with Angular Forms?',
+    answer: "I'm proficient in both Reactive Forms and Template-driven Forms in Angular. I use Reactive Forms for complex scenarios requiring dynamic validation, form arrays, and custom validators. Template Forms work great for simpler use cases. I implement robust form validation, error handling, and user-friendly feedback patterns.",
+    category: 'skills',
+    priority: 8
+  },
+  {
+    keywords: ['rxjs', 'observables', 'operators', 'reactive programming', 'streams'],
+    question: 'What is your RxJS experience?',
+    answer: "I have strong RxJS expertise including Observables, Subjects, and operators like switchMap, mergeMap, combineLatest, debounceTime, and distinctUntilChanged. I use RxJS for HTTP requests, state management, real-time data streams, and complex async operations. I follow best practices for subscription management and memory leak prevention.",
+    category: 'skills',
     priority: 8
   },
   {

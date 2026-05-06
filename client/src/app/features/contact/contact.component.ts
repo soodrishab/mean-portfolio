@@ -87,16 +87,17 @@ interface ContactForm {
           </div>
 
           <form class="contact-form" (ngSubmit)="onSubmit()" #form="ngForm">
-            @if (submitSuccess()) {
-              <div class="success-message">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            @if (showToast()) {
+              <div class="toast-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                   <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
-                <p>Thank you for your message! I'll get back to you soon.</p>
+                <span>Thank you for your message! I'll get back to you soon.</span>
               </div>
-            } @else {
-              <div class="form-group">
+            }
+
+            <div class="form-group">
                 <label for="name">Name *</label>
                 <input
                   type="text"
@@ -190,7 +191,6 @@ interface ContactForm {
                   </svg>
                 }
               </button>
-            }
           </form>
         </div>
       </div>
@@ -420,21 +420,41 @@ interface ContactForm {
       animation: spin 0.8s linear infinite;
     }
 
-    .success-message {
-      text-align: center;
-      padding: 2rem;
+    .toast-message {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #22c55e;
+      color: white;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      animation: slideDown 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
 
       svg {
-        color: #22c55e;
-        margin-bottom: 1rem;
-        width: 48px;
-        height: 48px;
+        flex-shrink: 0;
       }
 
-      p {
-        font-size: 1.1rem;
-        color: var(--text-primary);
+      span {
+        font-size: 0.95rem;
+        font-weight: 500;
       }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
 
     .error-message {
@@ -462,9 +482,9 @@ export class ContactComponent {
   };
 
   readonly isSubmitting = signal(false);
-  readonly submitSuccess = signal(false);
   readonly submitError = signal<string | null>(null);
   readonly submitted = signal(false);
+  readonly showToast = signal(false);
 
   onSubmit(): void {
     this.submitted.set(true);
@@ -482,8 +502,10 @@ export class ContactComponent {
     this.apiService.submitContact(this.formData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.submitSuccess.set(true);
+          this.showToast.set(true);
           this.resetForm();
+          // Auto-hide toast after 5 seconds
+          setTimeout(() => this.showToast.set(false), 5000);
         }
       },
       error: (err) => {
