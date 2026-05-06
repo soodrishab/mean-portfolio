@@ -11,6 +11,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy (required for Railway/cloud hosting behind reverse proxy)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(corsMiddleware);
@@ -55,6 +58,10 @@ const startServer = async (): Promise<void> => {
     app.listen(Number(PORT), '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`SMTP configured: ${!!process.env.SMTP_USER && !!process.env.SMTP_PASS}`);
+      if (process.env.SMTP_USER) {
+        console.log(`SMTP_USER: ${process.env.SMTP_USER.substring(0, 5)}...`);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
