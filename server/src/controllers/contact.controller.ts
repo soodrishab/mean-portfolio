@@ -33,17 +33,29 @@ export const submitContactForm = async (
 
     // Send email notification (non-blocking)
     sendEmail({
-      to: process.env.CONTACT_EMAIL || 'rishabsood9@gmail.com',
-      subject: `Portfolio Contact: ${subject || 'New Message'} from ${name}`,
+      to: 'rishabsood91@gmail.com',
+      subject: `Portfolio: ${subject || 'New Contact Message'}`,
       html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject || 'N/A'}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-        <hr>
-        <p><small>Received at: ${new Date().toISOString()}</small></p>
+        <h2>New Portfolio Contact Message</h2>
+        <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f5f5f5;"><strong>From</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f5f5f5;"><strong>Email</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;"><a href="mailto:${email}">${email}</a></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f5f5f5;"><strong>Subject</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${subject || 'N/A'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd; background: #f5f5f5;"><strong>Message</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${message}</td>
+          </tr>
+        </table>
+        <p style="color: #888; font-size: 12px; margin-top: 20px;">Received: ${new Date().toLocaleString()}</p>
       `
     }).catch(err => console.error('Failed to send email notification:', err));
 
