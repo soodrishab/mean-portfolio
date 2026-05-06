@@ -54,7 +54,7 @@ import { ScrollService } from '../../../core/services/scroll.service';
 
           <a
             class="cta-button"
-            href="/assets/resume/Rishab_Sood_Resume.pdf"
+            href="https://soodrishab.github.io/portfolio/assets/Rishab_Sood_Resume.pdf"
             target="_blank"
             rel="noopener"
           >
