@@ -58,10 +58,7 @@ const startServer = async (): Promise<void> => {
     app.listen(Number(PORT), '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`SMTP configured: ${!!process.env.SMTP_USER && !!process.env.SMTP_PASS}`);
-      if (process.env.SMTP_USER) {
-        console.log(`SMTP_USER: ${process.env.SMTP_USER.substring(0, 5)}...`);
-      }
+      console.log(`Resend API configured: ${!!process.env.RESEND_API_KEY}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

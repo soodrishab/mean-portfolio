@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 interface EmailOptions {
   to: string;
@@ -7,54 +7,37 @@ interface EmailOptions {
   from?: string;
 }
 
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '465'),
-    secure: true, // Use SSL on port 465
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    },
-    connectionTimeout: 10000, // 10 second timeout
-  });
-};
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
-  // Skip if SMTP is not configured
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log('📧 Email skipped - SMTP not configured');
-    console.log('   SMTP_USER set:', !!process.env.SMTP_USER);
-    console.log('   SMTP_PASS set:', !!process.env.SMTP_PASS);
+  // Skip if Resend is not configured
+  if (!process.env.RESEND_API_KEY) {
+    console.log('📧 Email skipped - RESEND_API_KEY not configured');
     console.log('   Would have sent:', options.subject, 'to', options.to);
     return;
   }
 
-  console.log('📧 Attempting to send email...');
-  console.log('   From:', process.env.SMTP_USER);
+  console.log('📧 Attempting to send email via Resend...');
   console.log('   To:', options.to);
   console.log('   Subject:', options.subject);
 
-  const transporter = createTransporter();
-
   try {
-    // Verify SMTP connection first
-    await transporter.verify();
-    console.log('✅ SMTP connection verified');
-
-    const result = await transporter.sendMail({
-      from: options.from || `"Portfolio Contact" <${process.env.SMTP_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: options.from || 'Portfolio Contact <onboarding@resend.dev>',
       to: options.to,
       subject: options.subject,
       html: options.html
     });
 
-    console.log('✅ Email sent successfully to:', options.to);
-    console.log('   Message ID:', result.messageId);
+    if (error) {
+      console.error('❌ Email send failed:', error.message);
+      throw new Error(error.message);
+    }
+
+    console.log('✅ Email sent successfully!');
+    console.log('   Email ID:', data?.id);
   } catch (error: any) {
     console.error('❌ Email send failed:', error.message);
-    console.error('   Error code:', error.code);
-    console.error('   Full error:', JSON.stringify(error, null, 2));
     throw error;
   }
 };
