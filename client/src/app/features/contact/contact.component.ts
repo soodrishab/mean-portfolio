@@ -103,10 +103,15 @@ interface ContactForm {
                   id="name"
                   name="name"
                   [(ngModel)]="formData.name"
+                  #nameInput="ngModel"
                   required
                   placeholder="Your name"
                   [disabled]="isSubmitting()"
+                  [class.invalid]="submitted() && nameInput.invalid"
                 />
+                @if (submitted() && nameInput.invalid) {
+                  <span class="field-error">Name is required</span>
+                }
               </div>
 
               <div class="form-group">
@@ -116,11 +121,22 @@ interface ContactForm {
                   id="email"
                   name="email"
                   [(ngModel)]="formData.email"
+                  #emailInput="ngModel"
                   required
                   email
                   placeholder="your.email@example.com"
                   [disabled]="isSubmitting()"
+                  [class.invalid]="submitted() && emailInput.invalid"
                 />
+                @if (submitted() && emailInput.invalid) {
+                  <span class="field-error">
+                    @if (emailInput.errors?.['required']) {
+                      Email is required
+                    } @else {
+                      Please enter a valid email
+                    }
+                  </span>
+                }
               </div>
 
               <div class="form-group">
@@ -141,11 +157,16 @@ interface ContactForm {
                   id="message"
                   name="message"
                   [(ngModel)]="formData.message"
+                  #messageInput="ngModel"
                   required
                   rows="5"
                   placeholder="Tell me about your project or just say hello..."
                   [disabled]="isSubmitting()"
+                  [class.invalid]="submitted() && messageInput.invalid"
                 ></textarea>
+                @if (submitted() && messageInput.invalid) {
+                  <span class="field-error">Message is required</span>
+                }
               </div>
 
               @if (submitError()) {
@@ -157,7 +178,7 @@ interface ContactForm {
               <button
                 type="submit"
                 class="submit-btn"
-                [disabled]="form.invalid || isSubmitting()"
+                [disabled]="isSubmitting()"
               >
                 @if (isSubmitting()) {
                   <span class="loading-spinner"></span>
@@ -344,6 +365,17 @@ interface ContactForm {
           opacity: 0.7;
           cursor: not-allowed;
         }
+
+        &.invalid {
+          border-color: #ef4444;
+        }
+      }
+
+      .field-error {
+        display: block;
+        color: #ef4444;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
       }
 
       textarea {
@@ -432,8 +464,16 @@ export class ContactComponent {
   readonly isSubmitting = signal(false);
   readonly submitSuccess = signal(false);
   readonly submitError = signal<string | null>(null);
+  readonly submitted = signal(false);
 
   onSubmit(): void {
+    this.submitted.set(true);
+
+    // Validate required fields
+    if (!this.formData.name || !this.formData.email || !this.formData.message) {
+      return;
+    }
+
     if (this.isSubmitting()) return;
 
     this.isSubmitting.set(true);
@@ -463,5 +503,6 @@ export class ContactComponent {
       subject: '',
       message: ''
     };
+    this.submitted.set(false);
   }
 }
