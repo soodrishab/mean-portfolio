@@ -21,7 +21,7 @@ import { ApiService, Project } from '../../core/services/api.service';
             [class.active]="!selectedTech()"
             (click)="filterByTech(null)"
           >
-            All Projects
+            All Projects ({{ projects().length }})
           </button>
           @for (tech of uniqueTechnologies(); track tech) {
             <button
@@ -29,7 +29,7 @@ import { ApiService, Project } from '../../core/services/api.service';
               [class.active]="selectedTech() === tech"
               (click)="filterByTech(tech)"
             >
-              {{ tech }}
+              {{ tech }} ({{ getCountForTech(tech) }})
             </button>
           }
         </div>
@@ -391,5 +391,9 @@ export class ProjectsComponent implements OnInit {
         this.projects().filter((p) => p.technologies.includes(tech))
       );
     }
+  }
+
+  getCountForTech(tech: string): number {
+    return this.projects().filter((p) => p.technologies.includes(tech)).length;
   }
 }
