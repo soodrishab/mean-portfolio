@@ -1,0 +1,45 @@
+{
+  "model": "claude-sonnet-4-20250514",
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(ng:*)",
+      "Bash(git:*)",
+      "Bash(node:*)",
+      "Bash(npx:*)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo:*)"
+    ]
+  },
+  "context": {
+    "includeFiles": [
+      "CLAUDE.md",
+      "README.md",
+      "package.json",
+      "angular.json"
+    ],
+    "excludePatterns": [
+      "node_modules/**",
+      "dist/**",
+      "coverage/**",
+      ".git/**"
+    ]
+  },
+  "hooks": {
+    "preCommit": ".claude/hooks/pre-commit.sh",
+    "postEdit": ".claude/hooks/post-edit.sh"
+  },
+  "skills": {
+    "directory": ".claude/skills"
+  },
+  "agents": {
+    "directory": ".claude/agents"
+  }
+}
