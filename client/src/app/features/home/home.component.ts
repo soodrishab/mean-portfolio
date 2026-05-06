@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService, Profile } from '../../core/services/api.service';
 import { ScrollService } from '../../core/services/scroll.service';
@@ -79,9 +79,21 @@ import { ScrollService } from '../../core/services/scroll.service';
                   [src]="p.avatar"
                   [alt]="p.name"
                   class="avatar"
+                  (mousedown)="startLongPress($event, p.avatar)"
+                  (mouseup)="endLongPress()"
+                  (mouseleave)="endLongPress()"
+                  (touchstart)="startLongPress($event, p.avatar)"
+                  (touchend)="endLongPress()"
+                  (touchcancel)="endLongPress()"
                 />
               } @else {
-                <div class="avatar-initials">
+                <div class="avatar-initials"
+                  (mousedown)="startLongPress($event, null)"
+                  (mouseup)="endLongPress()"
+                  (mouseleave)="endLongPress()"
+                  (touchstart)="startLongPress($event, null)"
+                  (touchend)="endLongPress()"
+                  (touchcancel)="endLongPress()">
                   {{ getInitials(p.name) }}
                 </div>
               }
@@ -109,6 +121,22 @@ import { ScrollService } from '../../core/services/scroll.service';
         </svg>
       </div>
     </section>
+
+    <!-- Image Zoom Overlay -->
+    @if (isZooming()) {
+      <div class="zoom-overlay" (click)="endLongPress()" (touchend)="endLongPress()">
+        <div class="zoom-container">
+          @if (zoomImageSrc()) {
+            <img [src]="zoomImageSrc()" alt="Zoomed profile" class="zoomed-image" />
+          } @else {
+            <div class="zoomed-initials">
+              {{ profile()?.name ? getInitials(profile()!.name) : '' }}
+            </div>
+          }
+        </div>
+        <span class="zoom-hint">Release to close</span>
+      </div>
+    }
   `,
   styles: [`
     .hero {
@@ -468,6 +496,92 @@ import { ScrollService } from '../../core/services/scroll.service';
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
+
+    /* Image Zoom Overlay Styles */
+    .zoom-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease-out;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .zoom-container {
+      animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .zoomed-image {
+      max-width: 90vw;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      object-fit: contain;
+    }
+
+    .zoomed-initials {
+      width: 70vmin;
+      height: 70vmin;
+      max-width: 500px;
+      max-height: 500px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .zoom-hint {
+      margin-top: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* Cursor hint on avatar */
+    .avatar, .avatar-initials {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
   `]
 })
 export class HomeComponent implements OnInit {
@@ -476,6 +590,11 @@ export class HomeComponent implements OnInit {
 
   readonly profile = signal<Profile | null>(null);
   readonly displayText = signal('');
+  readonly isZooming = signal(false);
+  readonly zoomImageSrc = signal<string | null>(null);
+
+  private longPressTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly LONG_PRESS_DURATION = 300; // ms
 
   private readonly titles = [
     'Senior MEAN Stack Developer',
@@ -545,5 +664,34 @@ export class HomeComponent implements OnInit {
       .join('')
       .toUpperCase()
       .substring(0, 2);
+  }
+
+  startLongPress(event: MouseEvent | TouchEvent, imageSrc: string | null): void {
+    event.preventDefault();
+
+    this.longPressTimer = setTimeout(() => {
+      this.zoomImageSrc.set(imageSrc);
+      this.isZooming.set(true);
+      // Prevent scrolling while zoomed
+      document.body.style.overflow = 'hidden';
+    }, this.LONG_PRESS_DURATION);
+  }
+
+  endLongPress(): void {
+    if (this.longPressTimer) {
+      clearTimeout(this.longPressTimer);
+      this.longPressTimer = null;
+    }
+
+    if (this.isZooming()) {
+      this.isZooming.set(false);
+      this.zoomImageSrc.set(null);
+      document.body.style.overflow = '';
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.endLongPress();
   }
 }
