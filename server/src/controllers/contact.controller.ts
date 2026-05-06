@@ -33,7 +33,7 @@ export const submitContactForm = async (
 
     // Send email notification (non-blocking)
     sendEmail({
-      to: 'rishabsood91@gmail.com',
+      to: 'rishabsood652@gmail.com',
       subject: `Portfolio: ${subject || 'New Contact Message'}`,
       html: `
         <h2>New Portfolio Contact Message</h2>
