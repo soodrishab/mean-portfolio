@@ -79,6 +79,7 @@ import { ScrollService } from '../../core/services/scroll.service';
                   [src]="p.avatar"
                   [alt]="p.name"
                   class="avatar"
+                  [class.pressing]="isPressing()"
                   (mousedown)="startLongPress($event, p.avatar)"
                   (mouseup)="endLongPress()"
                   (mouseleave)="endLongPress()"
@@ -88,6 +89,7 @@ import { ScrollService } from '../../core/services/scroll.service';
                 />
               } @else {
                 <div class="avatar-initials"
+                  [class.pressing]="isPressing()"
                   (mousedown)="startLongPress($event, null)"
                   (mouseup)="endLongPress()"
                   (mouseleave)="endLongPress()"
@@ -97,6 +99,7 @@ import { ScrollService } from '../../core/services/scroll.service';
                   {{ getInitials(p.name) }}
                 </div>
               }
+              <span class="long-press-hint">Hold to zoom</span>
             </div>
             <div class="tech-badges">
               <span class="badge">Angular</span>
@@ -576,11 +579,21 @@ import { ScrollService } from '../../core/services/scroll.service';
     /* Cursor hint on avatar */
     .avatar, .avatar-initials {
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-      &:active {
-        transform: scale(0.95);
+      &.pressing {
+        transform: scale(0.92);
+        box-shadow: 0 10px 30px rgba(79, 172, 254, 0.5);
       }
+    }
+
+    .long-press-hint {
+      display: block;
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      opacity: 0.7;
     }
   `]
 })
@@ -592,9 +605,10 @@ export class HomeComponent implements OnInit {
   readonly displayText = signal('');
   readonly isZooming = signal(false);
   readonly zoomImageSrc = signal<string | null>(null);
+  readonly isPressing = signal(false);
 
   private longPressTimer: ReturnType<typeof setTimeout> | null = null;
-  private readonly LONG_PRESS_DURATION = 300; // ms
+  private readonly LONG_PRESS_DURATION = 400; // ms
 
   private readonly titles = [
     'Senior MEAN Stack Developer',
@@ -666,18 +680,26 @@ export class HomeComponent implements OnInit {
       .substring(0, 2);
   }
 
-  startLongPress(event: MouseEvent | TouchEvent, imageSrc: string | null): void {
-    event.preventDefault();
+  startLongPress(event: Event, imageSrc: string | null): void {
+    // Don't prevent default - let touch events work naturally
+    this.isPressing.set(true);
 
     this.longPressTimer = setTimeout(() => {
       this.zoomImageSrc.set(imageSrc);
       this.isZooming.set(true);
+      this.isPressing.set(false);
       // Prevent scrolling while zoomed
       document.body.style.overflow = 'hidden';
+      // Vibrate on mobile if supported
+      if ('vibrate' in navigator) {
+        navigator.vibrate(50);
+      }
     }, this.LONG_PRESS_DURATION);
   }
 
   endLongPress(): void {
+    this.isPressing.set(false);
+
     if (this.longPressTimer) {
       clearTimeout(this.longPressTimer);
       this.longPressTimer = null;
